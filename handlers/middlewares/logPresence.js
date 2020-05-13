@@ -32,9 +32,11 @@ function log(ctx, next) {
 				],
 				// BEGIN VERIFIED NEW JOIN CODE
 				[
+					{
 					text: '✔️ Verified',
 					// eslint-disable-next-line max-len
 					callback_data: `/del -chat_id=${chats.presenceLog.id} -msg_id=${ctx.message} New Joiner(s) verified`
+					}
 				] 
 			] } }
 		);
