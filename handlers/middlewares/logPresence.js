@@ -21,13 +21,22 @@ function log(ctx, next) {
 			chats.presenceLog,
 			ctx.message.new_chat_members.map(getUsername).join(', ') +
 				' #joined ' + ctx.chat.title,
-			{ reply_markup: { inline_keyboard: [ [ {
-				text: '🚫 Ban all',
-				callback_data: `/ban ${
-					ctx.message.new_chat_members
-						.map(getId)
-						.join(' ')} [joining]`
-			} ] ] } }
+			{ reply_markup: { inline_keyboard: [ [ 
+					{
+					text: '🚫 Ban all',
+					callback_data: `/ban ${
+						ctx.message.new_chat_members
+							.map(getId)
+							.join(' ')} [joining]`
+					} 
+				],
+				// BEGIN VERIFIED NEW JOIN CODE
+				[
+					text: '✔️ Verified',
+					// eslint-disable-next-line max-len
+					callback_data: `/del -chat_id=${chats.presenceLog.id} -msg_id=${ctx.message} New Joiner(s) verified`
+				] 
+			] } }
 		);
 	} else if (ctx.updateSubTypes[0] === 'left_chat_member') {
 		ctx.telegram.sendMessage(
