@@ -35,7 +35,7 @@ function log(ctx, next) {
 					{
 					text: '✔️ Verified',
 					// eslint-disable-next-line max-len
-					callback_data: `/del -chat_id=${chats.presenceLog.id} -msg_id=${ctx.message} New Joiner(s) verified`
+					callback_data: `/del -chat_id=${chats.presenceLog} -msg_id=${ctx.message} New Joiner(s) verified`
 					}
 				] 
 			] } }
