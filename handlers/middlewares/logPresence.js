@@ -30,7 +30,8 @@ function log(ctx, next) {
 							.join(' ')} [joining]`
 					} 
 				],
-				// BEGIN VERIFIED NEW JOIN CODE
+				/* Draft code
+				// BEGIN NEW JOIN CODE VERIFY BOX
 				[
 					{
 					text: '✔️ Verified',
@@ -38,6 +39,7 @@ function log(ctx, next) {
 					callback_data: `/del -chat_id=${chats.presenceLog} -msg_id=${ctx.message} New Joiner(s) verified`
 					}
 				] 
+				*/
 			] } }
 		);
 	} else if (ctx.updateSubTypes[0] === 'left_chat_member') {
