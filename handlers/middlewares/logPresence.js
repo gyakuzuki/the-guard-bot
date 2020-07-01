@@ -21,6 +21,7 @@ function log(ctx, next) {
 			chats.presenceLog,
 			ctx.message.new_chat_members.map(getUsername).join(', ') +
 				' #joined ' + ctx.chat.title,
+<<<<<<< HEAD
 			{ reply_markup: { inline_keyboard: [ [ 
 					{
 					text: '🚫 Ban all',
@@ -48,6 +49,16 @@ function log(ctx, next) {
 			getUsername(ctx.message.left_chat_member) +
 				' #left ' + ctx.chat.title
 		);
+=======
+			{ reply_markup: { inline_keyboard: [ [ {
+				text: `🚫 Ban ${ctx.message.new_chat_members.length}`,
+				callback_data: `/ban ${
+					ctx.message.new_chat_members
+						.map(getId)
+						.join(' ')} [joining]`,
+			} ] ] } },
+		).catch(() => null);
+>>>>>>> e7ef169840397d9d686091343c9362161d90af82
 	}
 	return next();
 }
