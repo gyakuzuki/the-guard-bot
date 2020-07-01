@@ -1,13 +1,10 @@
 'use strict';
 
 // Utils
+const { html } = require('../../utils/html');
 const { isMaster } = require('../../utils/config');
 const { link, scheduleDeletion } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
-const { parse, strip } = require('../../utils/parse');
-
-// Bot
-const { replyOptions } = require('../../bot/options');
+const { parse, strip } = require('../../utils/cmd');
 
 // DB
 const {
@@ -15,15 +12,15 @@ const {
 	getUser,
 } = require('../../stores/user');
 
-const adminHandler = async ({ from, message, reply }) => {
+/** @param { import('../../typings/context').ExtendedContext } ctx */
+const adminHandler = async ({ from, message, replyWithHTML }) => {
 	if (!isMaster(from)) return null;
 
 	const { targets } = parse(message);
 
 	if (targets.length > 1) {
-		return reply(
+		return replyWithHTML(
 			'ℹ️ <b>Specify one user to promote.</b>',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
@@ -32,31 +29,25 @@ const adminHandler = async ({ from, message, reply }) => {
 		: from;
 
 	if (!userToAdmin) {
-		return reply(
+		return replyWithHTML(
 			'❓ <b>User unknown.</b>\n' +
 			'Please forward their message, then try again.',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
 	if (userToAdmin.status === 'banned') {
-		return reply('ℹ️ <b>Can\'t admin banned user.</b>', replyOptions);
+		return replyWithHTML('ℹ️ <b>Can\'t admin banned user.</b>');
 	}
 
 	if (userToAdmin.status === 'admin') {
-		return reply(
-			`⭐️ ${link(userToAdmin)} <b>is already admin.</b>`,
-			replyOptions
+		return replyWithHTML(
+			html`⭐️ ${link(userToAdmin)} <b>is already admin.</b>`,
 		);
 	}
 
-	try {
-		await admin(userToAdmin);
-	} catch (err) {
-		logError(err);
-	}
+	await admin(userToAdmin);
 
-	return reply(`⭐️ ${link(userToAdmin)} <b>is now admin.</b>`, replyOptions);
+	return replyWithHTML(html`⭐️ ${link(userToAdmin)} <b>is now admin.</b>`);
 };
 
 module.exports = adminHandler;

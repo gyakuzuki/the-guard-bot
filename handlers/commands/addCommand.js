@@ -5,7 +5,6 @@ const { addCommand, getCommand } = require('../../stores/command');
 
 // Bot
 const { Markup } = require('telegraf');
-const { replyOptions } = require('../../bot/options');
 
 const Cmd = require('../../utils/cmd');
 const { isMaster } = require('../../utils/config');
@@ -25,7 +24,7 @@ const roleBtn = (btRole, { newCommand, currentRole }) => {
 				replace: 'soft',
 			},
 			reason: newCommand,
-		})
+		}),
 	};
 };
 
@@ -41,16 +40,15 @@ const normalizeRole = (role = '') => {
 		: 'everyone';
 };
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const addCommandHandler = async (ctx) => {
 	const { chat, message, reply } = ctx;
-	if (chat.type !== 'private' && !message.reply_to_message) return null;
 	if (chat.type === 'channel') return null;
 	const { id } = ctx.from;
 
 	if (ctx.from.status !== 'admin') {
-		return reply(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Sorry, only admins access this command.</b>',
-			replyOptions
 		);
 	}
 
@@ -59,10 +57,9 @@ const addCommandHandler = async (ctx) => {
 
 	const isValidName = /^!?(\w+)$/.exec(commandName);
 	if (!isValidName) {
-		return reply(
+		return ctx.replyWithHTML(
 			'<b>Send a valid command.</b>\n\nExample:\n' +
 			'<code>/addcommand rules</code>',
-			replyOptions
 		);
 	}
 	const newCommand = isValidName[1].toLowerCase();
@@ -84,15 +81,15 @@ const addCommandHandler = async (ctx) => {
 			'/removecommand <code>&lt;name&gt;</code>' +
 			' - to remove a command.',
 			Markup.keyboard([ [ `/addcommand -replace ${newCommand}` ] ])
+				.selective()
 				.oneTime()
 				.resize()
-				.extra()
+				.extra(),
 		);
 	}
 	if (cmdExists && cmdExists.role === 'master' && !isMaster(ctx.from)) {
-		return ctx.reply(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Sorry, only master can replace this command.</b>',
-			replyOptions
 		);
 	}
 
@@ -109,19 +106,14 @@ const addCommandHandler = async (ctx) => {
 			...softReplace || { content },
 		});
 		return ctx.replyWithHTML(
-			`✅ <b>Successfully added <code>!${commandName}</code></b>.\n` +
+			`✅ <b>Successfully added <code>!${isValidName[1]}</code></b>.\n` +
 			'Who should be able to use it?',
-			inlineKeyboard(roleKbRow({ currentRole: role, newCommand }))
+			inlineKeyboard(roleKbRow({ currentRole: role, newCommand })),
 		);
 	}
 
-	await addCommand({ id, name: newCommand, state: 'role' });
-	return reply('Who can use this command?', Markup.keyboard([
-		[ 'Master', 'Admins', 'Everyone' ]
-	])
-		.oneTime()
-		.resize()
-		.extra());
+	// eslint-disable-next-line max-len
+	return ctx.replyWithHTML('ℹ️ <b>Reply to a message you\'d like to save</b>');
 };
 
 module.exports = addCommandHandler;

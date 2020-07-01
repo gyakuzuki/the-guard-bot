@@ -10,7 +10,7 @@ const { scheduleDeletion } = require('../../utils/tg');
 
 const { isMaster } = require('../../utils/config');
 
-const config = require('../../config');
+const { config } = require('../../utils/config');
 
 const deleteCustom = config.deleteCustom || { longerThan: Infinity };
 
@@ -45,6 +45,7 @@ const hasRole = (role, from) => {
 	}
 };
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const runCustomCmdHandler = async (ctx, next) => {
 	const commandName = ctx.match[1].toLowerCase();
 	const command = await getCommand({ isActive: true, name: commandName });

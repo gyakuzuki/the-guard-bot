@@ -27,7 +27,7 @@ You need to have [docker](https://docs.docker.com/engine/installation/linux/dock
 2. Clone this repository or [download zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).
 3. Copy `example.config.js` to `config.js` and edit it.
 4. Run `docker build -t the_guard_bot .` to build image.
-5. Run `docker run --rm -itd the_guard_bot` to start the bot.
+5. Run `docker run -v $(pwd)/data:/app/data --rm -itd the_guard_bot` to start the bot.
 
 Now you can add the bot as **administrator** to your groups.
 
@@ -56,6 +56,7 @@ Command                 | Role       | Available at | Description
 `/warn <reason>`        | _Admin_    | _Groups_     | Warns the user.
 `/unwarn`               | _Admin_    | _Everywhere_ | Removes the last warn from the user.
 `/nowarns`              | _Admin_    | _Everywhere_ | Clears warns for the user.
+`/permit`               | _Admin_    | _Everywhere_ | Permits the user to advertise once, within 24 hours.
 `/ban <reason>`         | _Admin_    | _Groups_     | Bans the user from groups.
 `/unban`                | _Admin_    | _Everywhere_ | Removes the user from ban list.
 `/user`                 | _Admin_    | _Everywhere_ | Shows the status of the user.

@@ -14,8 +14,7 @@ const regex = XRegExp.tag('ix')`^
 	\s*\?*
 $`;
 
-const noop = Function.prototype;
-
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const handler = async (ctx, next) => {
 	let [ , groupName ] = ctx.match;
 	if (groupName.toLowerCase() === 'this') {
@@ -32,8 +31,10 @@ const handler = async (ctx, next) => {
 
 	if (!link) return next();
 
-	ctx.deleteMessage().then(noop);
-	return ctx.reply(link, { reply_to_message_id: replyId(ctx.message) });
+	return ctx.reply(link, {
+		disable_web_page_preview: false,
+		reply_to_message_id: replyId(ctx.message),
+	});
 };
 
 module.exports = hears(regex, handler);
