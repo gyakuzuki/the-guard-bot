@@ -17,7 +17,7 @@ const { html } = HtmlUtils;
 const { link } = TgUtils;
 const { logError } = Log;
 
-const excludedGroupId = '-1001358439641'; // hardcoded lobby id
+const excludedGroupId = '-1001XXXXXXX41'; // hardcoded lobby id
 
 export = C.mount("message", async (ctx: ExtendedContext, next) => {
     const members = ctx.message?.new_chat_members?.filter(
