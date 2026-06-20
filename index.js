@@ -1,6 +1,9 @@
 // @ts-check
 'use strict';
 
+const dns = require('dns');
+dns.setServers(['1.1.1.1', '8.8.8.8']);
+
 process.chdir(__dirname);
 require('ts-node').register({ transpileOnly: true });
 

@@ -1,16 +1,11 @@
 'use strict';
 import axios from 'axios';
 
-const https = require('https'); // 1. Added https module
+
+
 const ms = require('millisecond');
 const { Telegraf } = require('telegraf');
 const { config } = require('../utils/config');
-
-// 2. Create the Keep-Alive Agent for the BT Hub
-const keepAliveAgent = new https.Agent({
-    keepAlive: true,
-    keepAliveMsecs: 30000
-});
 
 /** @typedef { import('../typings/context').ExtendedContext } ExtendedContext */
 
@@ -19,11 +14,7 @@ const bot = new Telegraf(config.token, {
 	handlerTimeout: ms('30s'),
 	telegram: {
            webhookReply: false,
-           agent: keepAliveAgent, // 3. Added here for Telegraf v4+
-           axios: axios.create({
-               timeout: 30000,
-               httpsAgent: keepAliveAgent // 4. Added here for Telegraf v3.x
-           }),
+           axios: axios.create({ timeout: 30000 }), 
          },
         api: {
           floodControl: true,
